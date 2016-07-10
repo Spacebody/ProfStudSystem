@@ -6,7 +6,7 @@ __author__ = 'Lightsing'
 import time, uuid
 
 from transwarp.db import next_id
-from transwarp.orm import Model, StringField, BooleanField, FloatField, TextField
+from transwarp.orm import Model, IntegerField, StringField, FloatField
 
 class User(Model):
     __table__ = 'user_tbl'
@@ -14,36 +14,65 @@ class User(Model):
     id = IntegerField(primary_key=True)
     user_id = IntegerField()
     user_type = IntegerField()
-    user_key = StringField(ddl='CHAR(32)')
+    user_key = StringField(ddl='char(32)')
 
-class User(Model):
-    __table__ = 'user_tbl'
+class Student(Model):
+    __table__ = 'stdu_tbl'
+
+    stdu_id = IntegerField(primary_key=True)
+    stdu_grade = IntegerField()
+    stdu_college = IntegerField()
+    stdu_gender = IntegerField()
+
+class Professor(Model):
+    __table__ = 'prof_tbl'
+
+    prof_id = IntegerField(primary_key=True)
+    prof_dept = IntegerField()
+    prof_college = IntegerField()
+    prof_photo = StringField(ddl='varchar(40)')
+    prof_desc = StringField(ddl='varchar(1000)')
+    max_std = IntegerField()
+    std_num = IntegerField()
+
+class Department(Model):
+    __table__ = 'dept_tbl'
+
+    dept_id = IntegerField(primary_key=True)
+    dept_name = StringField(ddl='varchar(40)')
+
+class Department(Model):
+    __table__ = 'dept_tbl'
+
+    dept_id = IntegerField(primary_key=True)
+    dept_name = StringField(ddl='varchar(40)')
+
+class College(Model):
+    __table__ = 'college_tbl'
+
+    college_id = IntegerField(primary_key=True)
+    college_name = StringField(ddl='varchar(40)')
+
+class Association(Model):
+    __table__ = 'assoc_tbl'
 
     id = IntegerField(primary_key=True)
-    user_id = IntegerField()
-    user_type = IntegerField()
-    user_key = StringField(ddl='CHAR(32)')
+    prof_id = IntegerField()
+    stdu_id = IntegerField()
 
+class Application(Model):
+    __table__ = 'apply_tbl'
 
-class Blog(Model):
-    __table__ = 'blogs'
+    id = IntegerField(primary_key=True)
+    stdu_id = IntegerField()
+    prof_id1 = IntegerField()
+    prof_id2 = IntegerField()
+    discription = StringField(ddl='varchar(400)')
 
-    id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
-    user_id = StringField(updatable=False, ddl='varchar(50)')
-    user_name = StringField(ddl='varchar(50)')
-    user_image = StringField(ddl='varchar(500)')
-    name = StringField(ddl='varchar(50)')
-    summary = StringField(ddl='varchar(200)')
-    content = TextField()
-    created_at = FloatField(updatable=False, default=time.time)
+class Task(Model):
+    __table__ = 'task_tbl'
 
-class Comment(Model):
-    __table__ = 'comments'
-
-    id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
-    blog_id = StringField(updatable=False, ddl='varchar(50)')
-    user_id = StringField(updatable=False, ddl='varchar(50)')
-    user_name = StringField(ddl='varchar(50)')
-    user_image = StringField(ddl='varchar(500)')
-    content = TextField()
-    created_at = FloatField(updatable=False, default=time.time)
+    id = IntegerField(primary_key=True)
+    college_id = IntegerField()
+    stdu_due_time = FloatField(updatable=False)
+    prof_due_time = FloatField(updatable=False)
