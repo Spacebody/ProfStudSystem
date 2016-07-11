@@ -9,7 +9,7 @@ from transwarp.web import get, view
 
 from models import User
 
-@view('test_users.html')
+@view('basic.html')
 @get('/')
 def test_users():
     users = User.find_all()
