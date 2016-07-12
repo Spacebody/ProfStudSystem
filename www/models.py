@@ -20,6 +20,7 @@ class Student(Model):
     __table__ = 'stdu_tbl'
 
     stdu_id = IntegerField(primary_key=True)
+    stdu_name = StringField(ddl='varchar(10)')
     stdu_grade = IntegerField()
     stdu_college = IntegerField()
     stdu_gender = IntegerField()
