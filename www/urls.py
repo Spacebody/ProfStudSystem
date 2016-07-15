@@ -52,6 +52,11 @@ def user_interceptor(next):
     ctx.request.user = user
     return next()
 
+@get('/signout')
+def signout():
+    ctx.response.delete_cookie(_COOKIE_NAME)
+    raise seeother('/')
+    
 @interceptor('/manage/')
 def manage_interceptor(next):
     user = ctx.request.user
