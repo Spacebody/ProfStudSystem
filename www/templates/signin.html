@@ -2,7 +2,7 @@
 <html class="uk-height-1-1">
 <head>
     <meta charset="utf-8" />
-    <title>登录 - Awesome Python Webapp</title>
+    <title>登录 - 学生-导师管理系统</title>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -39,7 +39,14 @@ $(function() {
                         showError(err);
                     }
                     else {
-                        return location.assign(result.user_type == 0 ? '/manage/' : '/');
+                        if(result.user_type == 1) {
+                            return location.assign('/');
+                        }else if (result.user_type == 2) {
+                            return location.assign('/prof');
+                        }else{
+                            return location.assign('/manage/');
+                        }
+                        //return location.assign(result.user_type == 0 ? '/manage/' : '/');
                     }
                     stopLoading();
                 });

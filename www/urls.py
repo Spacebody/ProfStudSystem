@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'Michael Liao'
+__author__ = 'Lightsing'
 
 import os, re, time, base64, hashlib, logging
 
@@ -78,13 +78,15 @@ def signout():
 @interceptor('/manage/')
 def manage_interceptor(next):
     user = ctx.request.user
-    if user and user.admin:
+    if user and user.user_type==0:
         return next()
     raise seeother('/signin')
 
 @view('register.html')
 @get('/register')
 def register():
+    if ctx.request.user:
+        raise seeother('/')
     return dict()
 
 @api
