@@ -98,7 +98,7 @@ def authenticate():
     remember = i.remember
     user = User.find_first('where user_id=?', user_id)
     if user is None:
-        raise APIError('auth:failed', 'email', 'Invalid email.')
+        raise APIError('auth:failed', 'ID', 'Invalid email.')
     elif user.user_key != user_key:
         raise APIError('auth:failed', 'password', 'Invalid password.')
     # make session cookie:
