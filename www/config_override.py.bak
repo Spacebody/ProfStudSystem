@@ -9,11 +9,11 @@ __author__ = 'Lightsing'
 
 configs = {
     'db': {
-        'host': 'dbs-cn-0.vnet.link',
+        'host': '10.20.2.113',
         'port': 3306,
-        'user': 'vedbs_816',
-        'password': 'HfwonvUzro',
-        'database': 'vedbs_816'
+        'user': 'develop_root',
+        'password': 'PythonDatabase',
+        'database': 'develop'
     },
     'session': {
         'secret': 'y9aB5J"kU}O28u0'

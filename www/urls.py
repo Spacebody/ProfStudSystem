@@ -11,6 +11,11 @@ from apis import api, APIError, APIValueError, APIPermissionError, APIResourceNo
 
 from models import User
 
+from config import configs
+
+_COOKIE_NAME = 'sustc_profstdu'
+_COOKIE_KEY = configs.session.secret
+
 def make_signed_cookie(id, password, max_age):
     # build cookie string by: id-expires-md5
     expires = str(int(time.time() + (max_age or 86400)))
@@ -22,23 +27,43 @@ def parse_signed_cookie(cookie_str):
         L = cookie_str.split('-')
         if len(L) != 3:
             return None
-        id, expires, md5 = L
+        user_id, expires, md5 = L
         if int(expires) < time.time():
             return None
-        user = User.get(id)
+        user = User.find_first('where user_id=?', user_id)
         if user is None:
             return None
-        if md5 != hashlib.md5('%s-%s-%s-%s' % (id, user.password, expires, _COOKIE_KEY)).hexdigest():
+        if md5 != hashlib.md5('%s-%s-%s-%s' % (user_id, user.user_key, expires, _COOKIE_KEY)).hexdigest():
             return None
         return user
     except:
         return None
 
-@view('basic.html')
+@interceptor('/')
+def user_interceptor(next):
+    logging.info('try to bind user from session cookie...')
+    user = None
+    cookie = ctx.request.cookies.get(_COOKIE_NAME)
+    if cookie:
+        logging.info('parse session cookie...')
+        user = parse_signed_cookie(cookie)
+        if user:
+            logging.info('bind user <%s> to session...' % user.user_id)
+    ctx.request.user = user
+    return next()
+
+@interceptor('/manage/')
+def manage_interceptor(next):
+    user = ctx.request.user
+    if user and user.admin:
+        return next()
+    raise seeother('/signin')
+
+@view('index.html')
 @get('/')
-def test_users():
-    users = User.find_all()
-    return dict(users=users)
+def index():
+
+    return dict(user=ctx.request.user)
 
 @view('register.html')
 @get('/register')
@@ -55,7 +80,7 @@ def register_user():
     re_name = i.user_name.strip()
     re_id = i.user_id.strip()
     re_key = i.user_key
-    if not name:
+    if not re_name:
         raise APIValueError('name')
     if not re_id or not _RE_ID.match(re_id):
         raise APIValueError('id')
@@ -67,6 +92,6 @@ def register_user():
     user = User(user_id=re_id, user_type=1, user_key=re_key)
     user.insert()
     # make session cookie:
-    cookie = make_signed_cookie(user.user_id, user.user_key, None)
+    cookie = make_signed_cookie(str(user.user_id), user.user_key, None)
     ctx.response.set_cookie(_COOKIE_NAME, cookie)
     return user

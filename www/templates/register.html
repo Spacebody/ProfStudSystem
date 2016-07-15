@@ -13,7 +13,7 @@ $(function () {
     var vm = new Vue({
         el: '#form-register',
         data: {
-            name: '',
+            user_name: '',
             user_id: '',
             password1: '',
             password2: ''
@@ -21,7 +21,7 @@ $(function () {
         methods: {
             submit: function (event) {
                 event.preventDefault();
-                if (! this.name.trim()) {
+                if (! this.user_name.trim()) {
                     return showError('请输入名字');
                 }
                 if (! validateID(this.user_id.trim())) {
@@ -35,7 +35,7 @@ $(function () {
                 }
                 startLoading();
                 postApi('/api/users', {
-                    user_name: this.name,
+                    user_name: this.user_name,
                     user_id: this.user_id.trim(),
                     user_key: CryptoJS.MD5(this.password1).toString(),
                 }, function (err, r) {
@@ -64,7 +64,7 @@ $(function () {
             <div class="uk-form-row">
                 <label class="uk-form-label">名字:</label>
                 <div class="uk-form-controls">
-                    <input v-model="name" type="text" maxlength="50" placeholder="名字" class="uk-width-1-1">
+                    <input v-model="user_name" type="text" maxlength="50" placeholder="名字" class="uk-width-1-1">
                 </div>
             </div>
             <div class="uk-form-row">
