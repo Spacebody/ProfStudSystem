@@ -42,12 +42,6 @@ class Department(Model):
     dept_id = IntegerField(primary_key=True)
     dept_name = StringField(ddl='varchar(40)')
 
-class Department(Model):
-    __table__ = 'dept_tbl'
-
-    dept_id = IntegerField(primary_key=True)
-    dept_name = StringField(ddl='varchar(40)')
-
 class College(Model):
     __table__ = 'college_tbl'
 

@@ -9,7 +9,7 @@ from transwarp.web import get, post, ctx, view, interceptor, seeother, notfound
 
 from apis import api, APIError, APIValueError, APIPermissionError, APIResourceNotFoundError
 
-from models import User
+from models import User, Student, Professor
 
 from config import configs
 
@@ -52,11 +52,29 @@ def user_interceptor(next):
     ctx.request.user = user
     return next()
 
+@view('index.html')
+@get('/')
+def index():
+    student = None
+    user = ctx.request.user
+    if user:
+        user.user_key = '******'
+    if ctx.request.user:
+        student = Student.find_first('where stdu_id=?', ctx.request.user.user_id)
+    return dict(user=user, stdu = student)
+
+@view('signin.html')
+@get('/signin')
+def signin():
+    if ctx.request.user:
+        raise seeother('/')
+    return dict()
+
 @get('/signout')
 def signout():
     ctx.response.delete_cookie(_COOKIE_NAME)
     raise seeother('/')
-    
+
 @interceptor('/manage/')
 def manage_interceptor(next):
     user = ctx.request.user
@@ -64,16 +82,29 @@ def manage_interceptor(next):
         return next()
     raise seeother('/signin')
 
-@view('index.html')
-@get('/')
-def index():
-
-    return dict(user=ctx.request.user)
-
 @view('register.html')
 @get('/register')
 def register():
     return dict()
+
+@api
+@post('/api/authenticate')
+def authenticate():
+    i = ctx.request.input(remember='')
+    user_id = i.re_id.strip()
+    user_key = i.re_key
+    remember = i.remember
+    user = User.find_first('where user_id=?', user_id)
+    if user is None:
+        raise APIError('auth:failed', 'email', 'Invalid email.')
+    elif user.user_key != user_key:
+        raise APIError('auth:failed', 'password', 'Invalid password.')
+    # make session cookie:
+    max_age = 604800 if remember=='true' else None
+    cookie = make_signed_cookie(str(user.user_id), user.user_key, max_age)
+    ctx.response.set_cookie(_COOKIE_NAME, cookie, max_age=max_age)
+    user.user_key = '******'
+    return user
 
 _RE_ID = re.compile(r'^[0-9]{8}$')
 _RE_MD5 = re.compile(r'^[0-9a-f]{32}$')
