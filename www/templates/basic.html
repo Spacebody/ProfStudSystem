@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     {% block meta %}<!-- block meta  -->{% endblock %}
-    <title>{% block title %} ? {% endblock %} - 学生-导师管理系统</title>
+    <title>{% block title %} 南方科技大学 {% endblock %} - 学生-导师管理系统</title>
     <link rel="stylesheet" href="/static/css/uikit.min.css">
     <link rel="stylesheet" href="/static/css/uikit.gradient.min.css">
     <link rel="stylesheet" href="/static/css/awesome.css" />
@@ -18,9 +18,26 @@
 <body>
     <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
         <div class="uk-container uk-container-center">
-            <a href="/" class="uk-navbar-brand">学生-导师管理系统</a>
+            <a href="/" class="uk-navbar-brand">南方科技大学 学生-导师管理系统</a>  
+            <ul class="uk-navbar-nav uk-hidden-small">
+                <li><a href="/">首页</a></li>
+                <li><a href="/">公告</a></li>  
+                <li><a href="/">导师动态</a></li>
+                <li><a href="/">师生活动</a></li>
+                <a href="#hiddenNav" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
+            </ul>
+            <div id="hiddenNav" class="uk-offcanvas">
+                <div class="uk-offcanvas-bar">
+            <ul class="uk-nav uk-nav-offcanvas" data-uk-nav>
+                <li><a href="/">首页</a></li>
+                <li><a href="/">公告</a></li>  
+                <li><a href="/">导师动态</a></li>
+                <li><a href="/">师生活动</a></li>
+            </ul>
+            </div>
+            </div>        
             <div class="uk-navbar-flip">
-                <ul class="uk-navbar-nav">
+                <ul class="uk-navbar-nav uk-hideen-small">   
                 {% if stdu %}
                     <li class="uk-parent" data-uk-dropdown>
                         <a href="#0"><i class="uk-icon-user"></i> {{ stdu.stdu_name }}</a>
@@ -44,6 +61,7 @@
                     <li><a href="/signin"><i class="uk-icon-sign-in"></i> 登陆</a></li>
                     <li><a href="/register"><i class="uk-icon-edit"></i> 注册</a></li>
                 {% endif %}
+                <a href="#hiddenNav" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
                 </ul>
             </div>
         </div>
